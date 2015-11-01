@@ -1,5 +1,4 @@
-var acorn = require('acorn'),
-  path = require('path'),
+var path = require('path'),
   isExpressRouting = require('./isExpressRouting'),
   SourceNode = require('source-map').SourceNode,
   SourceMapConsumer = require('source-map').SourceMapConsumer,
@@ -19,23 +18,6 @@ module.exports = function(source, map) {
 
   var fine = true;
 
-  // parse source
-  // try {
-  //   var ast = acorn.parse(source, {ecmaVersion: 6, sourceType: 'module'});
-  // }
-  // catch (err) {
-  //   fine = false;
-  //   return this.callback(err);
-  // }
-
-  /* USE PARSING ?
-  var names = ast.body.filter(function(node) {
-        return node.type === 'FunctionDeclaration';
-      }).map(function(node) {
-        return node.id.name;
-      });
-  */
-
   console.log('--------resource --------');
   console.log(resourcePath);
   if (/node_modules/.test(resourcePath)) {
@@ -54,10 +36,7 @@ module.exports = function(source, map) {
 
   var processor = require('./processor');
 
-  var exportApp = '';
-
-  if (check.containsExpressInstance) {
-    exportApp = 'module.exports = app;\n';
+  if (check.containsExpressInstance) {    
     processor.setExpressResourcePath(resourcePath);
   }    
 
@@ -74,8 +53,7 @@ module.exports = function(source, map) {
 
   prependTxt = prependTxt.join(' ');
 
-  appendTxt = [
-    exportApp,
+  appendTxt = [    
     'if (module.hot && ' +JSON.stringify(fine) +') {\n\t',      
       'module.hot.dispose(function(data){\n\t\t',          
         'if (module.hot.data.routes.length > 0 && app != null) {\n\t\t',
