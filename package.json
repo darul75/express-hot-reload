@@ -1,0 +1,35 @@
+{
+  "name": "express-hot-loader",
+  "version": "0.0.1",
+  "description": "Reload express routes",
+  "main": "index.js",  
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darul75/express-hot-reload.git"
+  },  
+  "keywords": [
+    "express",
+    "javascript",
+    "webpack",
+    "hmr",
+    "livereload",
+    "live",
+    "edit",
+    "hot",
+    "loader",
+    "reload"
+  ],
+  "author": "Julien Valéry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/darul75/express-hot-reload/issues"
+  },
+  "homepage": "https://github.com/darul75/express-hot-reload",
+  "dependencies": {
+    "acorn": "^2.0.4",      
+    "express": "^4.12.3",
+    "node-libs-browser": "^0.5.0",
+    "source-map": "^0.4.4",
+    "webpack": "^1.9.7"
+  }
+}
