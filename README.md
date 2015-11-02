@@ -33,7 +33,7 @@ When an HMR update is triggered:
 
 ## Requirements
 
-- Express application **variable instance must be set to 'app'**
+- Express application **variable instance name must be set to 'app'**
 
 ```javascript
 const app = module.exports = express(); // ok
