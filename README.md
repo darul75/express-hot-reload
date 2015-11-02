@@ -59,6 +59,23 @@ if(module.hot) {
   });
 ```
 
+## Installation
+
+```bash
+npm install express-hot-reload
+```
+
+In your server webpack config, add this loaders :
+
+```javascript
+{
+  loaders: [
+    {test: /\.js$/, loaders: ['express-hot-reload', 'babel-loader'], exclude: /node_modules/}
+   ]
+}
+```
+    	
+
 ## Note
 
 Currently, it won't work with no mount path:
