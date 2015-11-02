@@ -14,6 +14,8 @@ Webpack HMR updates on an express application with usual Routing HTTP/middleware
 
 Indeed when HMR updates are applied, your code is run again but previous express routing registered to your instance should be canceled first.
 
+![](https://github.com/darul75/express-hot-reload/blob/master/anim.gif)
+
 ## Solution
 
 This solution could be certainly improved and I am not sure it works for all cases :)
