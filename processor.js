@@ -1,14 +1,14 @@
 'use strict';
 
-var isExpressRouting = require('./isExpressRouting');
+var layerNames = ['bound dispatch','<anonymous>'];
 
 module.exports = {
 
   doReload: function (app, data) {
-    console.log("PATCHING EXPRESS ROUTES");    
+    console.log('starting erasing old routes');
 
     // match layer with current file routes
-    var matchRoute = function(layer, idx) {      
+    var matchRoute = function(layer, idx) {
       for (var i=0; i<data.routes.length; i++) {
         var path = data.routes[i];
         try {
@@ -23,13 +23,13 @@ module.exports = {
       }
 
       return true;
-    };    
+    };
 
-    var checkRoute = function(layer) {      
+    var checkRoute = function(layer) {
 
-      var stack = layer.handle.stack || (layer.name === 'bound dispatch' ? [layer] : null);
+      var stack = layer.handle.stack || (layerNames.indexOf(layer.name) >= 0 ? [layer] : null);
 
-      var removes = [];      
+      var removes = [];
 
       if (stack != null) {
 
@@ -37,15 +37,15 @@ module.exports = {
 
         var newStack = stack.filter(matchRoute);
 
-        if (oldLengh !== newStack.length) {                
+        if (oldLengh !== newStack.length) {
           return true;
         }
 
       }
 
-      if (layer.route) {        
+      if (layer.route) {
         checkRoutes(layer.route.stack);
-      }                 
+      }
     };
 
     var checkRoutes = function(stack) {
@@ -62,12 +62,13 @@ module.exports = {
       removes.sort(function(a, b) { return a - b; });
 
       for (var i = removes.length -1; i >= 0; i--) {
-        stack.splice(removes[i],1);        
+        stack.splice(removes[i],1);
       }
-    };        
+    };
 
     checkRoutes(app._router.stack);
-    
+
+    console.log('erasing old routes done');
   },
 
   setExpressResourcePath: function(path) {

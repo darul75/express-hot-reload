@@ -1,5 +1,5 @@
 var path = require('path'),
-  isExpressRouting = require('./isExpressRouting'),
+  parser = require('./parser'),
   SourceNode = require('source-map').SourceNode,
   SourceMapConsumer = require('source-map').SourceMapConsumer,
   makeIdentitySourceMap = require('./makeIdentitySourceMap');
@@ -18,8 +18,6 @@ module.exports = function(source, map) {
 
   var fine = true;
 
-  console.log('--------resource --------');
-  console.log(resourcePath);
   if (/node_modules/.test(resourcePath)) {
     return this.callback(null, source, map);
   }
@@ -32,30 +30,30 @@ module.exports = function(source, map) {
       appendTxt,
       separator = '\n\n';
 
-  var check = isExpressRouting.check(src);
+  var check = parser(resourcePath, src);
 
   var processor = require('./processor');
 
-  if (check.containsExpressInstance) {    
+  if (check.containsExpressInstance) {
     processor.setExpressResourcePath(resourcePath);
-  }    
+  }
 
-  prependTxt = [    
-    'var processor = require(' + JSON.stringify(require.resolve('./processor')) + ');\n',    
+  prependTxt = [
+    'var processor = require(' + JSON.stringify(require.resolve('./processor')) + ');\n',
   ];
 
   if (processor.mainExpressResourcePath != null &&
-    processor.mainExpressResourcePath !== resourcePath) {  
+    processor.mainExpressResourcePath !== resourcePath) {
     // INJECT EXPRESS APP
     prependTxt.push('var expressFile = ' +JSON.stringify(processor.mainExpressResourcePath) + ';\n\t');
-    prependTxt.push('var app = require(' + JSON.stringify(require.resolve(processor.mainExpressResourcePath)) + ');\n\t');    
+    prependTxt.push('var app = require(' + JSON.stringify(require.resolve(processor.mainExpressResourcePath)) + ');\n\t');
   }
 
   prependTxt = prependTxt.join(' ');
 
-  appendTxt = [    
-    'if (module.hot && ' +JSON.stringify(fine) +') {\n\t',      
-      'module.hot.dispose(function(data){\n\t\t',          
+  appendTxt = [
+    'if (module.hot && ' +JSON.stringify(fine) +') {\n\t',
+      'module.hot.dispose(function(data){\n\t\t',
         'if (module.hot.data.routes.length > 0 && app != null) {\n\t\t',
           '\tprocessor.doReload(app, module.hot.data);\n',
         '\t\t}\n',
@@ -73,7 +71,7 @@ module.exports = function(source, map) {
         '\tprocessor.warn();\n',
       '}\n',
 
-    '}'    
+    '}'
   ].join(' ');
 
   if (this.sourceMap === false) {
@@ -91,14 +89,7 @@ module.exports = function(source, map) {
     ].join(separator);
 
   if (!map) {
-    
-    // var transform = require("babel-core").transform(source, {
-    //   sourceMaps: true,
-    //   filename: this.resourcePath,
-    //   sourceFileName: this.resourcePath
-    // }); 
-
-    map = makeIdentitySourceMap(source, this.resourcePath);    
+    map = makeIdentitySourceMap(source, this.resourcePath);
   }
 
   var node = new SourceNode(null, null, null, [
