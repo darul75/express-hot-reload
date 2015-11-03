@@ -34,18 +34,13 @@ When an HMR update is triggered:
 ## Requirements
 
 - Express application **variable instance name must be set to 'app'**
+- Express application **instance must be exported**
 
 ```javascript
 const app = module.exports = express(); // ok
 
 // below named myApp won't work
 // const myApp = module.exports = express();
-```
-
-- In your main express declaration module, **export your express application instance**:
-
-```javascript
-const app = module.exports = express();
 ```
 
 - Use normal way of declaring updates with webpack HMR:
