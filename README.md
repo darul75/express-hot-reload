@@ -59,7 +59,7 @@ if(module.hot) {
 ## Installation
 
 ```bash
-npm install express-hot-reload
+npm install express-hot-loader
 ```
 
 In your server webpack config, add this loaders :
@@ -67,7 +67,7 @@ In your server webpack config, add this loaders :
 ```javascript
 {
   loaders: [
-    {test: /\.js$/, loaders: ['express-hot-reload', 'babel-loader'], exclude: /node_modules/}
+    {test: /\.js$/, loaders: ['express-hot-loader', 'babel-loader'], exclude: /node_modules/}
    ]
 }
 ```
